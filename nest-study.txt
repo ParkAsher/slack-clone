@@ -1,0 +1,54 @@
+[설치]
+npm i -g @nestjs/cli
+-------------------------------------------------------------------------------------
+
+[nest 프로젝트 생성]
+nest new 폴더명
+-------------------------------------------------------------------------------------
+
+src 폴더 안에 대부분의 코드를 작성 할 것이다!
+-------------------------------------------------------------------------------------
+
+[nodemon 같은 기능  hot reload]
+npm i --save-dev webpack-node-externals run-script-webpack-plugin webpack
+
+[webpack-hmr.config.js 파일 생성]
+const nodeExternals = require('webpack-node-externals');
+const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
+
+module.exports = function (options, webpack) {
+  return {
+    ...options,
+    entry: ['webpack/hot/poll?100', options.entry],
+    externals: [
+      nodeExternals({
+        allowlist: ['webpack/hot/poll?100'],
+      }),
+    ],
+    plugins: [
+      ...options.plugins,
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.WatchIgnorePlugin({
+        paths: [/\.js$/, /\.d\.ts$/],
+      }),
+      new RunScriptWebpackPlugin({ name: options.output.filename, autoRestart: false }),
+    ],
+  };
+};
+
+[src/main.ts 수정]
+declare const module: any
+
+if(module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+}
+
+[package.json 수정]
+"start:dev": "nest start --watch --webpackPath webpack-hmr.config.js",
+-------------------------------------------------------------------------------------
+
+앞으로 npm run start:dev 로 하면 된다!
+-------------------------------------------------------------------------------------
+
+
