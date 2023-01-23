@@ -74,3 +74,38 @@ controllers : router라고 보면된다.
 
 req, res 쓰는게 안좋은 이유 : jest로 테스트할때 목킹해야한다.
 Nest에는 return 만 하면 되니 함수만 목킹하면 된다.
+------------------------------------------------------------------------------------
+
+dotenv
+
+dotenv 설치 해서 사용 할 수도있지만,
+nest 에서는 module방식이므로 세팅을 더 해야한다.
+
+[설치]
+npm i --save @nestjs/config
+
+[app.module.ts 수정]
+import { ConfigModule } from '@nestjs/config'
+
+imports에다가 ConfigModule.forRoot() 반드시 
+
+설정이 있는 애들
+forRoot()
+forFeature()
+...
+------------------------------------------------------------------------------------
+[ConfigService]
+import { ConfigService } from '@nestjs/config'
+
+[app.module.ts에서]
+providers: [ConfigService] 추가
+
+[app.service.ts에서]
+import { ConfigService } from '@nestjs/config'
+
+constructor(private readonly configService: ConfigService);
+---------------------------------------------------------------------------------
+
+
+
+
