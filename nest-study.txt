@@ -106,6 +106,46 @@ import { ConfigService } from '@nestjs/config'
 constructor(private readonly configService: ConfigService);
 ---------------------------------------------------------------------------------
 
+[Logger Middleware]
+/src/middlewares/logger.middleware.ts
 
+import { Injectable, NestMiddleware } from '@nestjs/common'
 
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  private logger = new Logger('HTTP');
 
+  use(request: Request, response: Response, next: NextFunction): void {
+    const { ip, method, originalUrl } = request;
+    const userAgent = request.get('user-agent') || '';
+
+    response.on('finish', () => {
+      const { statusCode } = response;
+      const contentLength = response.get('content-length');
+      this.logger.log(
+        `${method} ${originalUrl} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+      );
+    });
+  }
+}
+
+implements 이기 때문에 use 함수를 무조건 구현해주어야 한다.
+
+nest에서는 console.log 보다 loger.log 를 더 많이쓴다.
+
+express 에서는 debug 라이브러리를 사용하여 추적
+nest에서는 logger의 context를 이용하여 추적
+
+app.modules.ts 에서
+import { NestModule, MiddlewareConsumer } from '@nestjs/common'
+import { LoggerMiddleware } from './middlewares/logger.middleware';
+
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer): any {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
+
+forRoutes(컨트롤러) 나 forRoutes(주소) 로 특정 주소에만 미들웨어 적용 가능
+
+실무에서는 nest morgan 패키지 적용추천!
