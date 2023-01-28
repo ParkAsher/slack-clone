@@ -5,12 +5,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true })],
-  controllers: [AppController],
-  providers: [AppService, ConfigService],
+    imports: [ConfigModule.forRoot({ isGlobal: true })],
+    controllers: [AppController],
+    providers: [AppService, ConfigService],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(LoggerMiddleware).forRoutes('*');
-  }
+    configure(consumer: MiddlewareConsumer): any {
+        consumer.apply(LoggerMiddleware).forRoutes('*');
+    }
 }
