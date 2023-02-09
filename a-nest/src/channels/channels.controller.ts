@@ -1,5 +1,7 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger/dist/decorators';
 
+@ApiTags('CHANNEL')
 @Controller('api/workspaces/:url/channels')
 export class ChannelsController {
     // 모든 채널 가져오기
