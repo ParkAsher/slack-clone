@@ -15,18 +15,12 @@ import { UndefinedToNullInterceptor } from 'src/common/interceptors/undefinedToN
 import { JoinRequestDto } from './dto/join.request.dto';
 import { UsersService } from './users.service';
 
-@UseInterceptors(UndefinedToNullInterceptor)
 @ApiTags('USER')
 @Controller('api/users')
 export class UsersController {
     //DI
     constructor(private userService: UsersService) {}
 
-    @ApiResponse({
-        status: 200,
-        description: '성공',
-        type: UserDto,
-    })
     @ApiOperation({ summary: '내 정보 조회' })
     @Get()
     getUsers(@User() user) {
@@ -39,11 +33,6 @@ export class UsersController {
         this.userService.postUsers(data.email, data.nickname, data.password);
     }
 
-    @ApiResponse({
-        status: 200,
-        description: '성공',
-        type: UserDto,
-    })
     @ApiOperation({ summary: '로그인' })
     @Post('login')
     login(@User() user) {
