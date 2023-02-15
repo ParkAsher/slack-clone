@@ -49,6 +49,7 @@ import { Workspaces } from './entities/Workspaces';
             synchronize: false,
             logging: true,
             charset: 'utf8mb4_general_ci',
+            migrations: [__dirname + '/src/migrations/*.ts'],
         }),
         TypeOrmModule.forFeature([Users]),
     ],
