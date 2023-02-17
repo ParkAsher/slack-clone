@@ -1,13 +1,20 @@
+import { ValidationPipe } from '@nestjs/common/pipes';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './httpException.filter';
 
 declare const module: any;
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     const port = process.env.PORT || 3000;
+
+    // class-validator
+    app.useGlobalPipes(new ValidationPipe());
+    // 모든 컨트롤러에서 발생하는 http exception을 걸러준다.
+    app.useGlobalFilters(new HttpExceptionFilter());
 
     /* swagger */
     const config = new DocumentBuilder()
